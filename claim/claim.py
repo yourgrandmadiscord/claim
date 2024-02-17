@@ -60,7 +60,7 @@ class ClaimThread(commands.Cog):
     @checks.has_permissions(PermissionLevel.SUPPORTER)
     @checks.thread_only()
     @commands.command()
-    async def oclaim(self, ctx, *, member: discord.Member):
+    async def oclaim(self, ctx):
         """Removes all users from claimers and gives user all control over thread"""
         thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
         if thread and str(ctx.author.id) in thread['claimers']:
