@@ -56,7 +56,19 @@ class ClaimThread(commands.Cog):
         if thread and str(ctx.author.id) in thread['claimers']:
             await self.db.find_one_and_update({'thread_id': str(ctx.thread.channel.id)}, {'$set': {'claimers': [str(member.id)]}})
             await ctx.send('Added to claimers')
+    
+    @checks.has_permissions(PermissionLevel.SUPPORTER)
+    @checks.thread_only()
+    @commands.command()
+    async def oclaim(self, ctx, *, member: discord.Member):
+        """Removes all users from claimers and gives user all control over thread"""
+        thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
+        if thread and str(ctx.author.id) in thread['claimers']:
+            await self.db.find_one_and_update({'thread_id': str(ctx.thread.channel.id)}, {'$set': {'claimers': [str(ctx.author.id)]}})
+            await ctx.send('Added to claimers')
 
+
+    
     @checks.has_permissions(PermissionLevel.MODERATOR)
     @checks.thread_only()
     @commands.command()
