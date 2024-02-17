@@ -63,7 +63,7 @@ class ClaimThread(commands.Cog):
     async def oclaim(self, ctx):
         """Removes all users from claimers and gives user all control over thread"""
         thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
-        if thread and str(ctx.author.id) in thread['claimers']:
+        if thread:
             await self.db.find_one_and_update({'thread_id': str(ctx.thread.channel.id)}, {'$set': {'claimers': [str(ctx.author.id)]}})
             await ctx.send('Added to claimers')
 
