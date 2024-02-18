@@ -23,9 +23,9 @@ class ClaimThread(commands.Cog):
         thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
         if thread is None:
             await self.db.insert_one({'thread_id': str(ctx.thread.channel.id), 'claimers': [str(ctx.author.id)]})
-            await ctx.send('Claimed')
+            await ctx.send('**' + ctx.author.username + '** has successfully claimed this thread.')
         else:
-            await ctx.send('Thread is already claimed')
+            await ctx.send('Thread is already claimed, please use `>overclaim` to take over.')
 
     @checks.has_permissions(PermissionLevel.SUPPORTER)
     @checks.thread_only()
@@ -35,7 +35,7 @@ class ClaimThread(commands.Cog):
         thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
         if thread and str(ctx.author.id) in thread['claimers']:
             await self.db.find_one_and_update({'thread_id': str(ctx.thread.channel.id)}, {'$addToSet': {'claimers': str(member.id)}})
-            await ctx.send('Added to claimers')
+            await ctx.send('Successfully added **' + ${member.username} + '** to the claimers.')
 
     @checks.has_permissions(PermissionLevel.SUPPORTER)
     @checks.thread_only()
@@ -45,7 +45,7 @@ class ClaimThread(commands.Cog):
         thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
         if thread and str(ctx.author.id) in thread['claimers']:
             await self.db.find_one_and_update({'thread_id': str(ctx.thread.channel.id)}, {'$pull': {'claimers': str(member.id)}})
-            await ctx.send('Removed from claimers')
+            await ctx.send('Successfully removed **' + member.username + '** from claimers')
 
     @checks.has_permissions(PermissionLevel.SUPPORTER)
     @checks.thread_only()
@@ -55,7 +55,7 @@ class ClaimThread(commands.Cog):
         thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
         if thread:
             await self.db.find_one_and_update({'thread_id': str(ctx.thread.channel.id)}, {'$pull': {'claimers': str(ctx.author.id)}})
-            await ctx.send('Removed from claimers')
+            await ctx.send('Successfully unclaimed this thread. Feel free to claim now.')
 
     @checks.has_permissions(PermissionLevel.SUPPORTER)
     @checks.thread_only()
@@ -65,7 +65,7 @@ class ClaimThread(commands.Cog):
         thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
         if thread and str(ctx.author.id) in thread['claimers']:
             await self.db.find_one_and_update({'thread_id': str(ctx.thread.channel.id)}, {'$set': {'claimers': [str(member.id)]}})
-            await ctx.send('Added to claimers')
+            await ctx.send('Successfully transferred the thread\'s ownership to **' + member.username + '**.')
     
     @checks.has_permissions(PermissionLevel.SUPPORTER)
     @checks.thread_only()
@@ -75,8 +75,7 @@ class ClaimThread(commands.Cog):
         thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
         if thread:
             await self.db.find_one_and_update({'thread_id': str(ctx.thread.channel.id)}, {'$set': {'claimers': [str(ctx.author.id)]}})
-            await ctx.send('Added to claimers')
-
+            await ctx.send('**' + ctx.author.username + '** has successfully overclaimed this thread.')
 
     
     @checks.has_permissions(PermissionLevel.MODERATOR)
