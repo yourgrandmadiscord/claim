@@ -50,6 +50,16 @@ class ClaimThread(commands.Cog):
     @checks.has_permissions(PermissionLevel.SUPPORTER)
     @checks.thread_only()
     @commands.command()
+    async def uclaim(self, ctx):
+        """Removes user from the thread claimers"""
+        thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
+        if thread:
+            await self.db.find_one_and_update({'thread_id': str(ctx.thread.channel.id)}, {'$pull': {'claimers': str(ctx.author.id)}})
+            await ctx.send('Removed from claimers')
+
+    @checks.has_permissions(PermissionLevel.SUPPORTER)
+    @checks.thread_only()
+    @commands.command()
     async def transferclaim(self, ctx, *, member: discord.Member):
         """Removes all users from claimers and gives another member all control over thread"""
         thread = await self.db.find_one({'thread_id': str(ctx.thread.channel.id)})
