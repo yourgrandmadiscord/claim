@@ -10,7 +10,7 @@ class ClaimThread(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.db = self.bot.plugin_db.get_partition(self)
-        #check_reply.fail_msg = 'This thread has been claimed by another user.'
+        # check_reply.fail_msg = 'This thread has been claimed by another user.'
         self.bot.get_command('reply').add_check(check_reply)
         self.bot.get_command('areply').add_check(check_reply)
         self.bot.get_command('fareply').add_check(check_reply)
